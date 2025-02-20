@@ -43,9 +43,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:latest
 
       - name: Iniciar sesión en AWS ECR # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY & AWS_REGION
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          region: eu-south-2
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Tag and Push AWS ECR
         run: |
