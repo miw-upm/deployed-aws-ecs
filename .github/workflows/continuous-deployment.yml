@@ -41,6 +41,12 @@ jobs:
           docker tag $REPOSITORY:$VERSION $REGISTRY/$REPOSITORY:latest
           docker push $REGISTRY/$REPOSITORY:$VERSION
           docker push $REGISTRY/$REPOSITORY:latest
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Iniciar sesión en AWS ECR # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY & AWS_REGION
         uses: aws-actions/amazon-ecr-login@v2
