@@ -5,6 +5,8 @@ on:
 env:
   REGISTRY: ghcr.io # GitHub Container Registry (GHCR)
   REPOSITORY: ${{ github.repository }}
+  # 123456789012.dkr.ecr.eu-south-2.amazonaws.com/miw-upm
+  URL_AWS_ECR: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
 jobs:
   cd:
     name: Build & Push GitHub Package & Deploy on Render Docker Image
@@ -32,12 +34,19 @@ jobs:
           # 2º Configuración de Secrets en GitHub
           #    repositorio en GitHub >> settings >> secrets and variables >> actions >> new repository secret
           password: ${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}
-      - name: Build and Tag and Push Docker image
+      - name: Build Docker image
+        run: docker build  -t $REPOSITORY:$VERSION .
+      - name: Tag and Push on GitHub Packages
         run: |
-          docker build  -t $REPOSITORY:$VERSION .
           docker tag $REPOSITORY:$VERSION $REGISTRY/$REPOSITORY:$VERSION
           docker tag $REPOSITORY:$VERSION $REGISTRY/$REPOSITORY:latest
-      - name: Push Docker image to GitHub Container Registry
-        run: |
           docker push $REGISTRY/$REPOSITORY:$VERSION
           docker push $REGISTRY/$REPOSITORY:latest
+
+      - name: Iniciar sesión en AWS ECR # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY & AWS_REGION
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag and Push AWS ECR
+        run: |
+          docker tag $REPOSITORY:$VERSION $AWS_ECR_URL/$REPOSITORY:latest
+          docker push $AWS_ECR_URL/$REPOSITORY:latest
