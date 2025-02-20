@@ -5,7 +5,6 @@ on:
 env:
   REGISTRY: ghcr.io # GitHub Container Registry (GHCR)
   REPOSITORY: ${{ github.repository }}
-  # 123456789012.dkr.ecr.eu-south-2.amazonaws.com/miw-upm
   URL_AWS_ECR: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
 jobs:
   cd:
