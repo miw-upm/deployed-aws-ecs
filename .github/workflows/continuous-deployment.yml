@@ -54,5 +54,5 @@ jobs:
 
       - name: Tag and Push AWS ECR
         run: |
-          docker tag $REPOSITORY:$VERSION $AWS_ECR_URL/$ARTIFACT:latest
-          docker push $AWS_ECR_URL/$ARTIFACT:latest
+          docker tag $REPOSITORY:$VERSION $AWS_ECR_URL:latest
+          docker push $AWS_ECR_URL:latest
