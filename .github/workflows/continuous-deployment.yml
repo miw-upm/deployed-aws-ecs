@@ -5,7 +5,7 @@ on:
 env:
   REGISTRY: ghcr.io # GitHub Container Registry (GHCR)
   REPOSITORY: ${{ github.repository }}
-  URL_AWS_ECR: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
+  AWS_ECR_URL: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/miw-upm
 jobs:
   cd:
     name: Build & Push GitHub Package & Deploy on Render Docker Image
@@ -49,8 +49,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Iniciar sesión en AWS ECR # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY & AWS_REGION
+      - name: Iniciar sesión en AWS ECR
         uses: aws-actions/amazon-ecr-login@v2
+      - name: Verificar valores de variables
+        run: |
+          echo "$AWS_ECR_URL"
+          echo "$ARTIFACT:latest"
+          echo $AWS_ECR_URL/$ARTIFACT:latest
 
       - name: Tag and Push AWS ECR
         run: |
